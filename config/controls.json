@@ -1,0 +1,22 @@
+{
+  "controls": [
+    {
+      "id": "CTRL-MFA",
+      "name": "Multi-Factor Authentication",
+      "enabled": true,
+      "description": "Requires an additional factor when a password is used."
+    },
+    {
+      "id": "CTRL-RBAC",
+      "name": "Role-Based Access Control",
+      "enabled": false,
+      "description": "Restricts access according to the user's role."
+    },
+    {
+      "id": "CTRL-SESSION",
+      "name": "Session Timeout",
+      "enabled": false,
+      "description": "Limits how long an inactive authenticated session remains usable."
+    }
+  ]
+}
