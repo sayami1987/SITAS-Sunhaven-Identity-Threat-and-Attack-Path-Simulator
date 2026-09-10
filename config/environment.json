@@ -24,6 +24,21 @@
       "type": "device"
     },
     {
+      "id": "unauthorised_person",
+      "name": "Unauthorised Person",
+      "type": "attacker"
+    },
+    {
+      "id": "unattended_workstation",
+      "name": "Unattended Shared Workstation",
+      "type": "device"
+    },
+    {
+      "id": "active_nurse_session",
+      "name": "Active Nurse Session",
+      "type": "session"
+    },
+    {
       "id": "care_portal",
       "name": "Sunhaven Care Portal",
       "type": "application"
@@ -53,6 +68,21 @@
     },
     {
       "source": "shared_workstation",
+      "target": "care_portal",
+      "relationship": "accesses"
+    },
+    {
+      "source": "unauthorised_person",
+      "target": "unattended_workstation",
+      "relationship": "uses_unattended_device"
+    },
+    {
+      "source": "unattended_workstation",
+      "target": "active_nurse_session",
+      "relationship": "finds_active_session"
+    },
+    {
+      "source": "active_nurse_session",
       "target": "care_portal",
       "relationship": "accesses"
     },

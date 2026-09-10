@@ -3,7 +3,7 @@
     {
       "id": "CTRL-MFA",
       "name": "Multi-Factor Authentication",
-      "enabled": true,
+      "enabled": false,
       "description": "Requires an additional factor when a password is used."
     },
     {
@@ -15,7 +15,7 @@
     {
       "id": "CTRL-SESSION",
       "name": "Session Timeout",
-      "enabled": false,
+      "enabled": true,
       "description": "Limits how long an inactive authenticated session remains usable."
     }
   ]
