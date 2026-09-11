@@ -1,7 +1,7 @@
 def validate_rating(value, risk_model, rating_name):
     """
     Validate that a likelihood or impact rating is within
-    the range defined in the risk model.
+    the range defined by the risk model.
     """
 
     minimum = risk_model["scale"]["minimum"]

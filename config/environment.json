@@ -23,6 +23,7 @@
       "name": "Shared Nurse Workstation",
       "type": "device"
     },
+
     {
       "id": "unauthorised_person",
       "name": "Unauthorised Person",
@@ -38,6 +39,81 @@
       "name": "Active Nurse Session",
       "type": "session"
     },
+
+    {
+      "id": "former_worker",
+      "name": "Former Worker",
+      "type": "threat_actor"
+    },
+    {
+      "id": "former_worker_identity",
+      "name": "Former Worker Identity",
+      "type": "identity"
+    },
+
+    {
+      "id": "compromised_care_worker",
+      "name": "Compromised Care Worker",
+      "type": "threat_actor"
+    },
+    {
+      "id": "care_worker_identity",
+      "name": "Care Worker Identity",
+      "type": "identity"
+    },
+    {
+      "id": "over_privileged_role",
+      "name": "Over-Privileged Role",
+      "type": "privilege"
+    },
+    {
+      "id": "restricted_admin_function",
+      "name": "Restricted Admin Function",
+      "type": "application_function"
+    },
+
+    {
+      "id": "admin_attacker",
+      "name": "External Admin Attacker",
+      "type": "attacker"
+    },
+    {
+      "id": "stolen_admin_credential",
+      "name": "Stolen Admin Credential",
+      "type": "credential"
+    },
+    {
+      "id": "privileged_admin_identity",
+      "name": "Privileged Admin Identity",
+      "type": "identity"
+    },
+    {
+      "id": "admin_console",
+      "name": "Restricted Admin Console",
+      "type": "application"
+    },
+
+    {
+      "id": "device_attacker",
+      "name": "External Device Attacker",
+      "type": "attacker"
+    },
+    {
+      "id": "stolen_care_worker_credential",
+      "name": "Stolen Care Worker Credential",
+      "type": "credential"
+    },
+    {
+      "id": "remote_care_worker_identity",
+      "name": "Remote Care Worker Identity",
+      "type": "identity"
+    },
+    {
+      "id": "unmanaged_device_session",
+      "name": "Unmanaged Device Session",
+      "type": "session"
+    },
+
     {
       "id": "care_portal",
       "name": "Sunhaven Care Portal",
@@ -71,6 +147,7 @@
       "target": "care_portal",
       "relationship": "accesses"
     },
+
     {
       "source": "unauthorised_person",
       "target": "unattended_workstation",
@@ -86,6 +163,81 @@
       "target": "care_portal",
       "relationship": "accesses"
     },
+
+    {
+      "source": "former_worker",
+      "target": "former_worker_identity",
+      "relationship": "uses_existing_identity"
+    },
+    {
+      "source": "former_worker_identity",
+      "target": "care_portal",
+      "relationship": "authenticates_to"
+    },
+
+    {
+      "source": "compromised_care_worker",
+      "target": "care_worker_identity",
+      "relationship": "controls_identity"
+    },
+    {
+      "source": "care_worker_identity",
+      "target": "over_privileged_role",
+      "relationship": "has_excessive_privilege"
+    },
+    {
+      "source": "over_privileged_role",
+      "target": "restricted_admin_function",
+      "relationship": "permits_access"
+    },
+    {
+      "source": "restricted_admin_function",
+      "target": "resident_records",
+      "relationship": "accesses"
+    },
+
+    {
+      "source": "admin_attacker",
+      "target": "stolen_admin_credential",
+      "relationship": "obtains"
+    },
+    {
+      "source": "stolen_admin_credential",
+      "target": "privileged_admin_identity",
+      "relationship": "authenticates_as"
+    },
+    {
+      "source": "privileged_admin_identity",
+      "target": "admin_console",
+      "relationship": "accesses_privileged_console"
+    },
+    {
+      "source": "admin_console",
+      "target": "resident_records",
+      "relationship": "administers"
+    },
+
+    {
+      "source": "device_attacker",
+      "target": "stolen_care_worker_credential",
+      "relationship": "obtains"
+    },
+    {
+      "source": "stolen_care_worker_credential",
+      "target": "remote_care_worker_identity",
+      "relationship": "authenticates_as"
+    },
+    {
+      "source": "remote_care_worker_identity",
+      "target": "unmanaged_device_session",
+      "relationship": "creates_session_from_unmanaged_device"
+    },
+    {
+      "source": "unmanaged_device_session",
+      "target": "care_portal",
+      "relationship": "accesses"
+    },
+
     {
       "source": "care_portal",
       "target": "resident_records",

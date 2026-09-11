@@ -1,381 +1,126 @@
-# SITAS Development Progress Log 
+# SITAS Progress Report 1
 
 ## Project
 
 **Project Title:** Sunhaven Identity Threat and Attack-Path Simulator (SITAS)  
 **Unit:** COIT13236 Cyber Security Project  
-**Project Context:** Sunhaven Care Workforce IAM  
-**Development Stage:** Working prototype with two implemented scenarios  
-**Document status:** Verified against the current project files and evidence ZIP
+**Individual Contribution:** Threat modelling, attack-path simulation, risk assessment and security-control evaluation
 
-\---
+---
 
-## 1\. Purpose of This Document
+## 1. Progress Overview
 
-This document records the actual SITAS work completed so far and separates completed work from planned work.
+My individual project is the **Sunhaven Identity Threat and Attack-Path Simulator (SITAS)**.
 
-The information below was checked against the current `sunhaven-sitas-threat-simulator` project files, source code, scenario files, screenshots and Git repository state.
+SITAS is a standalone Python-based cybersecurity simulator designed for the fictional Sunhaven Care environment. The purpose of the project is to show how identity-related weaknesses can create a path from an attacker to protected information.
 
-The project is being developed as a standalone individual technical contribution. It models fictional identity-related attack paths and simulated security controls without performing operational Microsoft Entra administration, Joiner-Mover-Leaver automation, manager access reviews, workforce compliance checking, security-event monitoring or access remediation.
+At this stage, I established the project structure, documented the requirements and scope, created the initial architecture, implemented the main attack-path engine and completed the first two working security scenarios.
 
-\---
+The project was designed to remain independent from the operational IAM work completed elsewhere in the Sunhaven project.
 
-## 2\. Current Project Structure
+---
 
-The current project contains the following main areas:
+## 2. Sunhaven Problem and My Proposed Solution
 
-```text
-sunhaven-sitas-threat-simulator/
-├── config/
-│   ├── controls.json
-│   ├── environment.json
-│   └── risk-model.json
-├── docs/
-│   ├── diagrams/
-│   │   └── architecture-diagram.png
-│   ├── project-plan.md
-│   ├── requirements.md
-│   └── test-plan.md
-├── evidence/
-│   ├── 07-scenario-01-mfa-off-open.png
-│   ├── 08-scenario-01-mfa-on-blocked.png
-│   ├── 09-scenario-02-session-off-open.png
-│   ├── 10-scenario-02-session-on-blocked.png
-│   ├── evidence-after-mfa.png
-│   ├── evidence-first-attack-path.png
-│   ├── evidence-risk-before-mfa.png
-│   └── first\_VS Code\_structure.png
-├── reports/
-├── scenarios/
-│   ├── scenario-01-stolen-nurse-credential.json
-│   └── scenario-02-shared-session.json
-├── src/
-│   ├── control\_engine.py
-│   ├── graph\_engine.py
-│   ├── model\_loader.py
-│   ├── pathfinder.py
-│   ├── risk\_engine.py
-│   └── sitas.py
-├── tests/
-├── .gitignore
-├── README.md
-└── First progress.txt
-```
+Sunhaven Care depends on user identities, passwords, shared workstations, active sessions and applications to allow workers to access information.
 
-The `reports/` and `tests/` folders currently exist but do not yet contain the planned reporting or automated test implementation.
+This creates security risks if:
 
-\---
+- a password is stolen;
+- an authenticated session is left active on a shared workstation;
+- an identity has more access than required;
+- an old account remains usable;
+- a privileged account is compromised.
 
-## 3\. Planning and Documentation Completed
+A normal architecture diagram can show which systems are connected, but it does not automatically show how an attacker may move through those systems or whether a security control can stop the attack.
 
-The following planning documents currently exist:
+My solution is SITAS.
 
-* `docs/project-plan.md`
-* `docs/requirements.md`
-* `docs/test-plan.md`
+SITAS represents the fictional Sunhaven environment as a **directed graph**. Identities, credentials, devices, sessions, applications and protected assets are represented as nodes, while their relationships are represented as directed edges.
 
-### 3.1 Project Plan
+The simulator then uses **Breadth-First Search (BFS)** to find a path between a threat source and a protected target.
 
-The project plan currently documents:
+This gives Sunhaven a simple way to see:
 
-* the fictional Sunhaven Care context;
-* the identity-related security problem;
-* the proposed standalone Python simulator;
-* the main project objective;
-* specific objectives;
-* individual contribution boundary;
-* in-scope and out-of-scope work;
-* planned technologies.
+- how an attack path may develop;
+- which asset may be reached;
+- how serious the scenario is;
+- which security control is relevant;
+- whether the path remains OPEN or becomes BLOCKED.
 
-### 3.2 Requirements
+---
 
-The requirements document currently defines functional requirements for:
+## 3. Work Completed
 
-* loading fictional JSON environment data;
-* validating required environment sections;
-* representing objects as graph nodes;
-* representing relationships as directed graph edges;
-* choosing start and target nodes;
-* discovering attack paths;
-* using Breadth-First Search;
-* avoiding endless graph processing;
-* calculating risk;
-* classifying severity;
-* supporting simulated controls;
-* comparing security exposure;
-* displaying understandable results.
+### Project Structure and Planning
 
-The document also defines non-functional requirements covering synthetic data, offline use, repeatable results, explainability, modular code, safe input handling, secret protection, understandable implementation and independence from other team members' runtime systems.
-
-### 3.3 Test Plan
-
-The test plan currently contains 15 planned test cases.
-
-These tests are documented but **have not yet been implemented as an automated pytest suite**.
-
-The `tests/` folder is currently empty.
-
-\---
-
-## 4\. Architecture Design
-
-A PNG architecture diagram currently exists at:
+I created the main project folders for:
 
 ```text
-docs/diagrams/architecture-diagram.png
+config/
+docs/
+evidence/
+reports/
+scenarios/
+src/
+tests/
 ```
 
-The diagram shows the following flow:
+I also prepared the initial:
+
+- project plan;
+- functional and non-functional requirements;
+- test plan;
+- architecture diagram;
+- project scope and individual contribution boundary.
+
+The scope clearly separates SITAS from live Microsoft Entra administration, Joiner-Mover-Leaver automation, access reviews, compliance checking and security-event monitoring.
+
+### Environment and Configuration
+
+I created JSON configuration files for the fictional Sunhaven environment and security controls.
+
+The environment model included:
+
+- attackers;
+- stolen credentials;
+- user identities;
+- shared workstations;
+- active sessions;
+- the Sunhaven Care Portal;
+- fictional resident records.
+
+### Core Python Modules
+
+I implemented the main Python modules:
 
 ```text
-Fictional Sunhaven Environment
-        ↓
-JSON Configuration
-        ↓
-Model Loader
-        ↓
-Attack Graph
-        ↓
-BFS Pathfinder
-        ↓
-Risk Calculator
-        ↓
-Security Control Simulation
-        ↓
-Before / After Comparison
-        ↓
-Security Findings
+model_loader.py
+graph_engine.py
+pathfinder.py
+risk_engine.py
+control_engine.py
+sitas.py
 ```
 
-This accurately represents the intended SITAS processing flow.
+The main functions implemented at this stage included:
 
-### Current Diagram Limitation
+- loading JSON data;
+- building the directed graph;
+- mapping node IDs to readable names;
+- finding attack paths with BFS;
+- calculating likelihood × impact risk;
+- classifying risk severity;
+- checking simulated controls;
+- displaying the attack path and final OPEN/BLOCKED result.
 
-The current ZIP contains the PNG architecture image, but it does **not** contain an editable `.drawio` source file.
+---
 
-An editable Draw.io version should therefore be added later if required for final design evidence.
+## 4. Scenario 1 – Stolen Nurse Credential
 
-\---
+The first scenario models an external attacker obtaining a fictional nurse password.
 
-## 5\. Configuration Files
-
-### 5.1 `config/environment.json`
-
-This file currently contains the fictional nodes and directed relationships required for Scenario 1 and Scenario 2.
-
-Current fictional nodes include:
-
-* External Attacker;
-* Stolen Nurse Password;
-* Nurse Identity;
-* Shared Nurse Workstation;
-* Unauthorised Person;
-* Unattended Shared Workstation;
-* Active Nurse Session;
-* Sunhaven Care Portal;
-* Fictional Resident Records.
-
-The environment currently supports the following two paths.
-
-### Scenario 1 path
-
-```text
-External Attacker
-→ Stolen Nurse Password
-→ Nurse Identity
-→ Shared Nurse Workstation
-→ Sunhaven Care Portal
-→ Fictional Resident Records
-```
-
-### Scenario 2 path
-
-```text
-Unauthorised Person
-→ Unattended Shared Workstation
-→ Active Nurse Session
-→ Sunhaven Care Portal
-→ Fictional Resident Records
-```
-
-### 5.2 `config/controls.json`
-
-The current control file contains:
-
-* `CTRL-MFA` – Multi-Factor Authentication;
-* `CTRL-RBAC` – Role-Based Access Control;
-* `CTRL-SESSION` – Session Timeout.
-
-In the current uploaded project state:
-
-```text
-CTRL-MFA     = false
-CTRL-RBAC    = false
-CTRL-SESSION = true
-```
-
-This current state reflects the final Scenario 2 blocked test. The values can be changed between `true` and `false` to demonstrate different simulated security states.
-
-### 5.3 `config/risk-model.json`
-
-The file currently exists but is **empty**.
-
-The current working program does **not** load risk settings from `risk-model.json`.
-
-Risk calculation and severity classification are currently implemented directly in:
-
-```text
-src/risk\_engine.py
-```
-
-Therefore, `risk-model.json` should be treated as a planned configuration file rather than a completed risk configuration.
-
-\---
-
-## 6\. Python Modules Implemented
-
-### 6.1 `src/model\_loader.py`
-
-This module is implemented and currently provides:
-
-* `load\_environment(file\_path)`
-* `load\_json\_file(file\_path)`
-
-`load\_environment()` checks that the environment contains both:
-
-* `nodes`
-* `relationships`
-
-It also handles:
-
-* file-not-found errors;
-* invalid JSON errors;
-* missing required environment sections.
-
-`load\_json\_file()` is used for general JSON files such as controls and scenario definitions.
-
-### 6.2 `src/graph\_engine.py`
-
-This module currently provides:
-
-* `build\_graph(environment)`
-* `get\_node\_names(environment)`
-
-`build\_graph()` converts the JSON relationships into a simple directed adjacency-list graph.
-
-`get\_node\_names()` maps internal node IDs to readable names for terminal output.
-
-### 6.3 `src/pathfinder.py`
-
-This module implements:
-
-```text
-find\_path\_bfs(graph, start, target)
-```
-
-The function uses Breadth-First Search with a queue.
-
-A `visited` set prevents the same node from being repeatedly expanded, reducing the risk of endless processing when graph cycles exist.
-
-The current function returns the first path it finds between the selected start and target nodes.
-
-### 6.4 `src/risk\_engine.py`
-
-This module currently implements:
-
-```python
-calculate\_risk(likelihood, impact)
-classify\_risk(score)
-```
-
-The risk calculation is:
-
-```text
-Risk Score = Likelihood × Impact
-```
-
-The current severity logic is:
-
-```text
-1–4   = Low
-5–9   = Medium
-10–16 = High
-17+   = Critical
-```
-
-The two implemented scenarios currently use likelihood and impact values on a 1–5 scale.
-
-The code currently does not validate that input values remain within 1–5. Input validation can be added later.
-
-### 6.5 `src/control\_engine.py`
-
-The current control engine implements:
-
-* `get\_control\_enabled()`
-* `check\_mfa\_control()`
-* `check\_session\_timeout\_control()`
-* `assess\_control()`
-
-Two controls currently have working simulation rules:
-
-```text
-CTRL-MFA
-CTRL-SESSION
-```
-
-`CTRL-RBAC` exists in `controls.json`, but its simulation rule has **not yet been implemented**.
-
-### 6.6 `src/sitas.py`
-
-The main program currently:
-
-1. loads the fictional environment;
-2. loads the current controls;
-3. loads a scenario JSON file;
-4. displays the scenario;
-5. builds the attack graph;
-6. runs BFS;
-7. displays the discovered path;
-8. calculates risk;
-9. classifies severity;
-10. assesses the scenario's related control;
-11. displays OPEN or BLOCKED status.
-
-Scenario 1 runs by default:
-
-```powershell
-python src/sitas.py
-```
-
-Scenario 2 can be selected using:
-
-```powershell
-python src/sitas.py scenarios/scenario-02-shared-session.json
-```
-
-\---
-
-## 7\. Scenario 1 – Stolen Nurse Credential
-
-Scenario file:
-
-```text
-scenarios/scenario-01-stolen-nurse-credential.json
-```
-
-### Scenario Definition
-
-```text
-Scenario ID:   SITAS-S01
-Scenario Name: Stolen Nurse Credential
-Start Node:    external\_attacker
-Target Node:   resident\_records
-Likelihood:    4
-Impact:        5
-Control:       CTRL-MFA
-```
-
-### Discovered Attack Path
+The discovered path was:
 
 ```text
 External Attacker
@@ -391,99 +136,33 @@ Sunhaven Care Portal
 Fictional Resident Records
 ```
 
-### Risk Result
+Risk result:
 
 ```text
 Likelihood: 4/5
-Impact:     5/5
+Impact: 5/5
 Risk Score: 20/25
-Severity:   Critical
+Severity: Critical
 ```
 
-### MFA Disabled Result
+The related security control is **Multi-Factor Authentication (MFA)**.
 
-A genuine earlier screenshot exists showing the MFA-disabled path as OPEN:
+The scenario demonstrated:
 
 ```text
-evidence/evidence-risk-before-mfa.png
+MFA OFF → Attack Path OPEN
+MFA ON  → Attack Path BLOCKED
 ```
 
-Observed result:
+This showed that SITAS could identify an attack path, calculate its risk and demonstrate the effect of a security control.
 
-```text
-Attack Path Status: OPEN
-Reason: MFA does not block this path.
-```
+---
 
-### MFA Enabled Result
+## 5. Scenario 2 – Shared Workstation Session Misuse
 
-The current evidence includes a successful MFA-enabled blocked result:
+The second scenario models an unauthorised person finding an unattended shared workstation with an active nurse session.
 
-```text
-evidence/08-scenario-01-mfa-on-blocked.png
-```
-
-Observed result:
-
-```text
-Control: CTRL-MFA
-Status: BLOCKED
-Reason: MFA blocks password-only authentication.
-
-Final Attack Path Status: BLOCKED
-```
-
-### Evidence Naming Issue Found
-
-The file:
-
-```text
-evidence/07-scenario-01-mfa-off-open.png
-```
-
-is incorrectly named.
-
-Its actual screenshot content shows an MFA **BLOCKED** result rather than an OPEN result.
-
-It should not be used as evidence of the MFA-off state unless it is replaced with a correct screenshot.
-
-For accurate documentation, use:
-
-```text
-evidence/evidence-risk-before-mfa.png
-```
-
-for the existing MFA OFF / OPEN evidence, and:
-
-```text
-evidence/08-scenario-01-mfa-on-blocked.png
-```
-
-for MFA ON / BLOCKED evidence.
-
-\---
-
-## 8\. Scenario 2 – Shared Workstation Session Misuse
-
-Scenario file:
-
-```text
-scenarios/scenario-02-shared-session.json
-```
-
-### Scenario Definition
-
-```text
-Scenario ID:   SITAS-S02
-Scenario Name: Shared Workstation Session Misuse
-Start Node:    unauthorised\_person
-Target Node:   resident\_records
-Likelihood:    3
-Impact:        5
-Control:       CTRL-SESSION
-```
-
-### Discovered Attack Path
+The path was:
 
 ```text
 Unauthorised Person
@@ -497,361 +176,95 @@ Sunhaven Care Portal
 Fictional Resident Records
 ```
 
-### Risk Result
+Risk result:
 
 ```text
 Likelihood: 3/5
-Impact:     5/5
+Impact: 5/5
 Risk Score: 15/25
-Severity:   High
+Severity: High
 ```
 
-### Session Timeout Disabled Result
+The related control is **Session Timeout**.
 
-Evidence:
+The scenario demonstrated:
 
 ```text
-evidence/09-scenario-02-session-off-open.png
+Session Timeout OFF → Attack Path OPEN
+Session Timeout ON  → Attack Path BLOCKED
 ```
 
-Observed result:
+This expanded the simulator beyond stolen passwords and showed that it can also model session-based identity risks.
 
-```text
-Control: CTRL-SESSION
-Status: OPEN
-Reason: Session timeout does not block this path.
+---
 
-Final Attack Path Status: OPEN
-```
+## 6. Evidence of Individual Contribution
 
-### Session Timeout Enabled Result
+The work completed is supported by project files and screenshots, including:
 
-Evidence:
+- the VS Code project structure;
+- architecture and design documentation;
+- Scenario 1 OPEN and BLOCKED outputs;
+- Scenario 2 OPEN and BLOCKED outputs;
+- Python source modules;
+- JSON configuration and scenario files;
+- Git repository history.
 
-```text
-evidence/10-scenario-02-session-on-blocked.png
-```
-
-Observed result:
-
-```text
-Control: CTRL-SESSION
-Status: BLOCKED
-Reason: Session timeout prevents reuse of the stale active session.
-
-Final Attack Path Status: BLOCKED
-```
-
-Both Scenario 2 screenshots match their filenames and expected results.
-
-\---
-
-## 9\. Manual Verification of Current Program State
-
-The current project was checked by executing both scenarios using the uploaded files.
-
-### Current Scenario 1 result
-
-With the current `controls.json` state:
-
-```text
-CTRL-MFA = false
-```
-
-Scenario 1 currently returns:
-
-```text
-Control: CTRL-MFA
-Status: OPEN
-Final Attack Path Status: OPEN
-```
-
-### Current Scenario 2 result
-
-With the current `controls.json` state:
-
-```text
-CTRL-SESSION = true
-```
-
-Scenario 2 currently returns:
-
-```text
-Control: CTRL-SESSION
-Status: BLOCKED
-Final Attack Path Status: BLOCKED
-```
-
-These results are consistent with the current source code and current controls configuration.
-
-\---
-
-## 10\. Development Problem Encountered
-
-A Python import error occurred during development:
-
-```text
-ImportError: cannot import name 'assess\_control' from 'control\_engine'
-```
-
-### Cause
-
-The updated `sitas.py` expected:
-
-```python
-from control\_engine import assess\_control
-```
-
-but the local `control\_engine.py` still contained an earlier version that did not include `assess\_control()`.
-
-### Resolution
-
-`control\_engine.py` was updated to include the new `assess\_control()` function and saved.
-
-After the files were synchronised, Scenario 1 executed successfully and displayed:
-
-```text
-Control: CTRL-MFA
-Status: BLOCKED
-Final Attack Path Status: BLOCKED
-```
-
-This was a genuine development issue and is useful reflection evidence because it shows a dependency problem between Python modules and the process used to correct it.
-
-\---
-
-## 11\. Git Repository Status
-
-The uploaded project contains a Git repository.
-
-The current Git history contains two commits:
-
-```text
-9a35470 Add initial SITAS threat simulator implementation
-13ec6bb Initial commit
-```
-
-However, the most recent scenario, documentation, evidence and source-code changes in the uploaded project are currently **not committed**.
-
-The working tree contains modified and untracked files.
-
-Therefore, the current documentation should not claim that Scenario 1 and Scenario 2 work have already been committed to GitHub.
-
-A new meaningful commit should be made after the current files are reviewed and cleaned.
-
-\---
-
-## 12\. README Status
-
-`README.md` currently exists, but it is still minimal.
-
-It currently contains the SITAS title and a short sentence describing the simulator.
-
-A more complete README is still planned and should later include:
-
-* project purpose;
-* features;
-* setup;
-* commands;
-* scenario examples;
-* controls;
-* architecture;
-* testing;
-* output/report information;
-* limitations;
-* synthetic-data statement.
-
-The README should therefore be described as **started**, not complete.
-
-\---
-
-## 13\. Current Evidence Status
-
-The current project contains genuine screenshots for:
-
-* initial VS Code/project structure;
-* first working attack path;
-* risk result before MFA;
-* MFA blocked output;
-* Scenario 2 Session Timeout OFF / OPEN;
-* Scenario 2 Session Timeout ON / BLOCKED.
-
-The following evidence issue should be corrected:
+The main evidence files for the first two scenarios are:
 
 ```text
 07-scenario-01-mfa-off-open.png
+08-scenario-01-mfa-on-blocked.png
+09-scenario-02-session-off-open.png
+10-scenario-02-session-on-blocked.png
 ```
 
-does not match its filename because the screenshot actually shows a BLOCKED MFA result.
+---
 
-Recommended action:
+## 7. Problems Encountered and Solutions
 
-* keep `evidence-risk-before-mfa.png` as the current Scenario 1 OFF/OPEN evidence; or
-* capture a new Scenario 1 OFF/OPEN screenshot and give it the intended `07-scenario-01-mfa-off-open.png` filename.
+One issue occurred when `sitas.py` was updated to use a new `assess_control()` function while `control_engine.py` still contained the older version.
 
-\---
+This caused an import error.
 
-## 14\. Current Progress Summary
+I corrected the issue by updating the control engine so both modules used the same function structure.
 
-|Area|Verified Status|
-|-|-|
-|Project folder structure|Completed|
-|Project plan|Completed initial version|
-|Requirements|Completed initial version|
-|Test plan|Completed as planned tests|
-|Architecture PNG|Completed|
-|Editable Draw.io source|Not present in current ZIP|
-|Environment JSON|Working for Scenarios 1 and 2|
-|Controls JSON|Working|
-|Risk model JSON|File exists but currently empty|
-|Graph engine|Working|
-|BFS pathfinder|Working|
-|Risk engine|Working|
-|Scenario 1 JSON|Working|
-|MFA simulation|Working|
-|Scenario 1 OFF evidence|Exists under `evidence-risk-before-mfa.png`|
-|Scenario 1 ON evidence|Working and correctly captured|
-|Scenario 2 JSON|Working|
-|Session Timeout simulation|Working|
-|Scenario 2 OFF evidence|Correct|
-|Scenario 2 ON evidence|Correct|
-|RBAC simulation|Not implemented|
-|Account Disablement|Not implemented|
-|Scenario 3|Not implemented|
-|Automated pytest tests|Not implemented|
-|JSON result export|Not implemented|
-|CSV result export|Not implemented|
-|HTML report|Not implemented|
-|Complete README|Not completed|
-|Current work committed to Git|Not yet|
-|Final documentation|In progress|
+This helped me understand the importance of keeping dependent modules consistent when the program is being developed across several files.
 
-\---
+---
 
-## 15\. Work From This Point
+## 8. Why This Work Is Useful to Sunhaven
 
-Development will continue from the current working two-scenario prototype.
+The main benefit of SITAS is that it makes identity-security problems easier to understand.
 
-### A. Correct Current Evidence and Configuration
-
-Before adding new functionality:
-
-* correct or replace the incorrectly named Scenario 1 OFF screenshot;
-* decide on a normal default state for `controls.json`;
-* populate or remove the currently empty `risk-model.json`;
-* add the editable Draw.io source if available;
-* update the README;
-* commit the verified Scenario 1 and Scenario 2 work.
-
-### B. Scenario 3 – Former Worker Identity Misuse
-
-Add a fictional path such as:
+Instead of only saying that a control such as MFA or Session Timeout is important, SITAS shows:
 
 ```text
-Former Worker
+Threat
 ↓
-Former Worker Identity
+Attack Path
 ↓
-Sunhaven Care Portal
+Risk
 ↓
-Fictional Resident Records
+Security Control
+↓
+OPEN or BLOCKED
 ```
 
-Add a simulated Account Disablement control and compare:
+This gives the Sunhaven project a separate security-analysis capability that can explain why particular IAM controls matter.
 
-```text
-Control OFF → OPEN
-Control ON  → BLOCKED
-```
+It also provides a safe way to test ideas because all users, credentials, devices and resident records in SITAS are fictional.
 
-### C. RBAC Scenario
+---
 
-Add a separate scenario that demonstrates excessive or inappropriate privilege and simulate RBAC as the control.
+## 9. Reflection
 
-### D. Additional Scenarios
+The main learning from this stage was understanding how separate technical components work together.
 
-Add further independent threat scenarios such as:
+I started with the security problem and then translated it into JSON data, a directed graph, BFS pathfinding, risk scoring and control simulation.
 
-* agency credential compromise;
-* privileged administrator compromise;
-* additional credential/session misuse scenarios where useful.
+The first two scenarios helped me confirm that the project idea was practical rather than only theoretical.
 
-### E. Automated Testing
+I also learned that modular code requires careful coordination. The import error between `sitas.py` and `control_engine.py` showed that a change in one module can affect another module.
 
-Implement pytest tests for:
-
-* environment loading;
-* invalid JSON;
-* graph nodes and relationships;
-* BFS path discovery;
-* unreachable targets;
-* graph cycles;
-* risk calculations;
-* severity classification;
-* MFA;
-* Session Timeout;
-* Account Disablement;
-* RBAC;
-* scenario execution.
-
-### F. Reporting
-
-Add:
-
-```text
-JSON output
-CSV output
-HTML threat assessment report
-```
-
-The HTML report should be a generated assessment report, not a security-monitoring dashboard.
-
-### G. Documentation and Evidence
-
-Continue with:
-
-* additional Draw.io diagrams;
-* screenshots;
-* requirements/test traceability;
-* Git commits;
-* test logs;
-* technical documentation;
-* demonstration preparation.
-
-\---
-
-## 16\. Reflection on Work Completed
-
-The project has moved from planning into a working technical prototype.
-
-The current implementation demonstrates how JSON configuration, modular Python files, a directed graph and Breadth-First Search can be combined to model identity-related cybersecurity attack paths.
-
-Scenario 1 demonstrates a password-based attack path and a simulated MFA control. Scenario 2 demonstrates misuse of an active session on an unattended shared workstation and a simulated Session Timeout control.
-
-The risk engine provides a simple and explainable likelihood × impact calculation. This is suitable for the current prototype because it allows risk results to be demonstrated clearly without introducing unnecessary mathematical complexity.
-
-A practical issue occurred when `sitas.py` was updated before `control\_engine.py`, resulting in an import error for `assess\_control`. Updating and saving the dependent module resolved the problem. This provided useful experience with Python module dependencies and debugging.
-
-The current implementation is still an early-to-intermediate prototype rather than a finished capstone system. The main remaining technical work is to add more scenarios and controls, automate testing, generate reports and improve final documentation and evidence.
-
-\---
-
-## 17\. Verified Current Status
-
-The verified project currently has:
-
-```text
-2 working attack scenarios
-2 working simulated security controls
-1 directed graph environment
-1 BFS pathfinder
-1 risk-scoring engine
-scenario selection through the command line
-manual before/after evidence for MFA and Session Timeout
-initial planning, requirements and test documentation
-an architecture PNG
-a working Git repository
-```
-
-The next development work will extend this base rather than restart the project.
-
+At the end of this stage, I had a working prototype with two attack scenarios and two security controls. The project had a clear direction, but more scenarios, stronger risk configuration, automated testing and reporting were still needed to make it a complete capstone solution.
