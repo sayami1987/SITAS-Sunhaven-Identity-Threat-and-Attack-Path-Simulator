@@ -84,7 +84,6 @@ SITAS does not:
 - perform real cyberattacks;
 - use real employee or resident information.
 
-For that reason, statements in this folder use wording such as **"aligned", "simulated", "implemented in SITAS"** and **"tested"**, rather than claiming real-world organisational enforcement.
 
 ---
 
