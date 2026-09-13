@@ -1,642 +1,414 @@
-# \# SITAS Test Plan
+# SITAS Test Plan
 
-# 
+## Project
 
-# \## Project
+**Project Title:** Sunhaven Identity Threat and Attack-Path Simulator (SITAS)  
+**Unit:** COIT13236 Cyber Security Project
 
-# 
+---
 
-# \*\*Project Title:\*\* Sunhaven Identity Threat and Attack-Path Simulator (SITAS)  
+## 1. Purpose
 
-# \*\*Unit:\*\* COIT13236 Cyber Security Project
+The purpose of this test plan is to confirm that SITAS correctly:
 
-# 
+- loads the fictional Sunhaven environment;
+- validates configuration data;
+- builds the directed attack graph;
+- discovers attack paths using Breadth-First Search (BFS);
+- handles unreachable targets and graph cycles;
+- calculates and classifies risk;
+- applies simulated security controls;
+- loads all six threat scenarios;
+- produces repeatable results.
 
-# \---
+Automated testing is implemented using `pytest`.
 
-# 
+Testing is supported by manual scenario evidence showing the effect of controls in both disabled and enabled states.
 
-# \## 1. Purpose
+---
 
-# 
+## 2. Test Scope
 
-# The purpose of testing is to confirm that SITAS correctly:
+### In Scope
 
-# 
+The current test suite covers:
 
-# \- loads the fictional Sunhaven environment;
+- model and JSON loading;
+- environment validation;
+- graph construction;
+- directed relationships;
+- node-name mapping;
+- BFS attack-path discovery;
+- shortest-path behaviour;
+- unreachable targets;
+- graph-cycle handling;
+- risk calculation;
+- risk severity boundaries;
+- invalid risk input;
+- six security-control simulations;
+- unknown-control handling;
+- all six scenario files;
+- repeatability of the current simulator components.
 
-# \- validates configuration data;
+### Not Yet in Scope
 
-# \- builds the directed attack graph;
+The following planned features are not yet implemented and therefore are not yet part of the current automated suite:
 
-# \- discovers attack paths using BFS;
+- automatic `--compare` mode;
+- JSON result export;
+- CSV summary generation;
+- HTML report generation.
 
-# \- handles unreachable targets and graph cycles;
+Tests for these features will be added when the features are implemented.
 
-# \- calculates and classifies risk;
+---
 
-# \- applies simulated security controls;
+## 3. Test Environment
 
-# \- loads all six threat scenarios;
+The current automated test environment uses:
 
-# \- provides repeatable results.
+```text
+Python 3.13.7
+pytest 9.1.1
+pluggy 1.6.0
+Windows
+```
 
-# 
+Tests are run from the project root using:
 
-# Automated testing is implemented using `pytest`.
+```powershell
+python -m pytest -v
+```
 
-# 
+The project uses:
 
-# \---
+```text
+pytest.ini
+```
 
-# 
+to identify the `src` directory and the `tests` directory.
 
-# \## 2. Current Automated Test Summary
+---
 
-# 
+## 4. Current Automated Test Summary
 
-# | Test Area | Number of Passing Tests |
+| Test Area | Number of Passing Tests |
+|---|---:|
+| Risk Engine | 14 |
+| Graph and BFS | 9 |
+| Control Engine | 13 |
+| Model Loader and Configuration | 9 |
+| **Total** | **45** |
 
-# |---|---:|
+Current verified result:
 
-# | Risk Engine | 14 |
+```text
+45 passed
+```
 
-# | Graph and BFS | 9 |
+---
 
-# | Control Engine | 13 |
+## 5. Risk Engine Tests
 
-# | Model Loader and Configuration | 9 |
+The risk-engine tests confirm:
 
-# | \*\*Total\*\* | \*\*45\*\* |
+- Scenario 1 risk calculation;
+- Scenario 2 risk calculation;
+- Scenario 3 risk calculation;
+- Low severity lower boundary;
+- Low severity upper boundary;
+- Medium severity lower boundary;
+- Medium severity upper boundary;
+- High severity lower boundary;
+- High severity upper boundary;
+- Critical severity lower boundary;
+- Critical severity upper boundary;
+- invalid likelihood is rejected;
+- invalid impact is rejected;
+- non-integer rating is rejected.
 
-# 
+Expected calculation:
 
-# Current verified result:
+```text
+Risk Score = Likelihood × Impact
+```
 
-# 
+Severity bands:
 
-# ```text
+```text
+1–4   = Low
+5–9   = Medium
+10–16 = High
+17–25 = Critical
+```
 
-# 45 passed
+Evidence:
 
-# ```
+```text
+evidence/19-pytest-risk-engine.png
+```
 
-# 
+---
 
-# \---
+## 6. Graph and BFS Tests
 
-# 
+The graph and pathfinder tests confirm:
 
-# \## 3. Risk Engine Tests
+- all expected graph nodes are created;
+- directed relationships are created correctly;
+- node IDs map to readable names;
+- BFS finds a reachable attack path;
+- BFS returns the shortest reachable path;
+- BFS returns `None` when no path exists;
+- graph cycles do not cause endless processing;
+- start equal to target is handled correctly;
+- the real Scenario 6 unmanaged-device path is correct.
 
-# 
+### Scenario 6 Regression Check
 
-# The risk-engine tests confirm:
+An earlier Scenario 6 model reused the same care-worker identity node as another scenario. This caused BFS to select a different valid shortest route.
 
-# 
+The graph model was corrected by introducing a separate:
 
-# \- Scenario 1 risk result;
+```text
+Remote Care Worker Identity
+```
 
-# \- Scenario 2 risk result;
+A dedicated automated test now verifies the intended Scenario 6 path so the problem can be detected if the graph is changed later.
 
-# \- Scenario 3 risk result;
+Evidence:
 
-# \- Low severity lower boundary;
+```text
+evidence/20-pytest-graph-bfs.png
+```
 
-# \- Low severity upper boundary;
+---
 
-# \- Medium severity lower boundary;
+## 7. Control Engine Tests
 
-# \- Medium severity upper boundary;
+The control-engine tests confirm the enabled and disabled behaviour of all six controls.
 
-# \- High severity lower boundary;
+| Control | Disabled | Enabled |
+|---|---|---|
+| Multi-Factor Authentication | OPEN | BLOCKED |
+| Session Timeout | OPEN | BLOCKED |
+| Account Disablement | OPEN | BLOCKED |
+| Role-Based Access Control | OPEN | BLOCKED |
+| Privileged Re-authentication | OPEN | BLOCKED |
+| Trusted Device Restriction | OPEN | BLOCKED |
 
-# \- High severity upper boundary;
+An additional test confirms that an unknown control does not incorrectly block an attack path.
 
-# \- Critical severity lower boundary;
+Evidence:
 
-# \- Critical severity upper boundary;
+```text
+evidence/21-pytest-control-engine.png
+```
 
-# \- invalid likelihood is rejected;
+---
 
-# \- invalid impact is rejected;
+## 8. Model Loader and Configuration Tests
 
-# \- non-integer rating is rejected.
+These tests confirm:
 
-# 
+- valid environment JSON loads successfully;
+- an environment missing `nodes` is rejected;
+- an environment missing `relationships` is rejected;
+- invalid JSON is rejected;
+- a missing JSON file is handled;
+- the real `environment.json` loads;
+- the real `controls.json` loads;
+- the real `risk-model.json` loads;
+- all six scenario JSON files load successfully.
 
-# Expected behaviour:
+Evidence:
 
-# 
+```text
+evidence/22-pytest-model-loader.png
+```
 
-# ```text
+---
 
-# Risk Score = Likelihood × Impact
+## 9. Full Test Suite
 
-# ```
+The complete project test suite is run with:
 
-# 
+```powershell
+python -m pytest -v
+```
 
-# Severity:
+Current verified result:
 
-# 
+```text
+45 passed
+```
 
-# ```text
+Evidence:
 
-# 1–4   = Low
+```text
+evidence/23-pytest-full-suite-45-passed.png
+```
 
-# 5–9   = Medium
+This confirms that the current automated test categories pass together in the current SITAS implementation.
 
-# 10–16 = High
+---
 
-# 17–25 = Critical
+## 10. Manual Scenario Verification
 
-# ```
+Automated testing is supported by manual before/after evidence.
 
-# 
+### Scenario 1 – Multi-Factor Authentication
 
-# Evidence:
+```text
+MFA OFF → OPEN
+MFA ON  → BLOCKED
+```
 
-# 
+Evidence:
 
-# ```text
+```text
+evidence/07-scenario-01-mfa-off-open.png
+evidence/08-scenario-01-mfa-on-blocked.png
+```
 
-# evidence/19-pytest-risk-engine.png
+### Scenario 2 – Session Timeout
 
-# ```
+```text
+Session Timeout OFF → OPEN
+Session Timeout ON  → BLOCKED
+```
 
-# 
+Evidence:
 
-# \---
+```text
+evidence/09-scenario-02-session-off-open.png
+evidence/10-scenario-02-session-on-blocked.png
+```
 
-# 
+### Scenario 3 – Account Disablement
 
-# \## 4. Graph and BFS Tests
+```text
+Account Disablement OFF → OPEN
+Account Disablement ON  → BLOCKED
+```
 
-# 
+Evidence:
 
-# The graph and pathfinder tests confirm:
+```text
+evidence/11-scenario-03-account-off-open.png
+evidence/12-scenario-03-account-on-blocked.png
+```
 
-# 
+### Scenario 4 – Role-Based Access Control
 
-# \- all expected graph nodes are created;
+```text
+RBAC OFF → OPEN
+RBAC ON  → BLOCKED
+```
 
-# \- directed relationships are created correctly;
+Evidence:
 
-# \- node IDs map to readable names;
+```text
+evidence/13-scenario-04-rbac-off-open.png
+evidence/14-scenario-04-rbac-on-blocked.png
+```
 
-# \- BFS finds a reachable attack path;
+### Scenario 5 – Privileged Re-authentication
 
-# \- BFS returns the shortest reachable path;
+```text
+Privileged Re-authentication OFF → OPEN
+Privileged Re-authentication ON  → BLOCKED
+```
 
-# \- BFS returns no path for an unreachable target;
+Evidence:
 
-# \- graph cycles do not cause endless processing;
+```text
+evidence/15-scenario-05-privauth-off-open.png
+evidence/16-scenario-05-privauth-on-blocked.png
+```
 
-# \- start equal to target is handled correctly;
+### Scenario 6 – Trusted Device Restriction
 
-# \- the real Scenario 6 unmanaged-device path is correct.
+```text
+Trusted Device Restriction OFF → OPEN
+Trusted Device Restriction ON  → BLOCKED
+```
 
-# 
+Evidence:
 
-# The Scenario 6 regression test is important because an earlier version reused a shared identity node and BFS selected a different valid path. The graph model was corrected by introducing a separate Remote Care Worker Identity.
+```text
+evidence/17-scenario-06-device-off-open.png
+evidence/18-scenario-06-device-on-blocked.png
+```
 
-# 
+---
 
-# Evidence:
+## 11. Test Acceptance Criteria
 
-# 
+The current simulator test stage is considered successful when:
 
-# ```text
+- all automated tests complete without failure;
+- valid configuration files load correctly;
+- invalid or incomplete configuration is handled safely;
+- BFS produces the expected route for known scenarios;
+- graph cycles do not cause infinite processing;
+- risk calculations match the configured 5 × 5 model;
+- each implemented control behaves as expected in enabled and disabled states;
+- all six scenario files are loadable;
+- manual OPEN/BLOCKED evidence matches the implemented control logic.
 
-# evidence/20-pytest-graph-bfs.png
+The current implementation satisfies these criteria with:
 
-# ```
+```text
+45 passed
+```
 
-# 
+---
 
-# \---
+## 12. Requirements Traceability
 
-# 
+Detailed requirement-to-test mapping is maintained in:
 
-# \## 5. Control Engine Tests
+```text
+docs/requirements-traceability.md
+```
 
-# 
+That document links each requirement to:
 
-# The control-engine tests confirm the enabled and disabled behaviour of all six controls.
+```text
+Requirement
+→ Implementation
+→ Test
+→ Evidence
+→ Status
+```
 
-# 
+This test plan therefore focuses on testing strategy and results rather than duplicating the full traceability matrix.
 
-# | Control | Disabled | Enabled |
+---
 
-# |---|---|---|
+## 13. Remaining Testing Work
 
-# | Multi-Factor Authentication | OPEN | BLOCKED |
+Additional tests will be added for:
 
-# | Session Timeout | OPEN | BLOCKED |
+- automatic before/after comparison;
+- JSON result export;
+- CSV scenario summary;
+- HTML report generation.
 
-# | Account Disablement | OPEN | BLOCKED |
+After those features are implemented, the full suite will be rerun and the total test count will be updated.
 
-# | Role-Based Access Control | OPEN | BLOCKED |
+---
 
-# | Privileged Re-authentication | OPEN | BLOCKED |
+## 14. Test Evidence Retention
 
-# | Trusted Device Restriction | OPEN | BLOCKED |
+Testing evidence is retained through:
 
-# 
+- terminal output;
+- screenshots;
+- pytest source files;
+- project configuration;
+- Git commits and repository history;
+- generated results and reports.
 
-# An additional test confirms that an unknown control does not incorrectly block an attack path.
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# evidence/21-pytest-control-engine.png
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \## 6. Model Loader and Configuration Tests
-
-# 
-
-# These tests confirm:
-
-# 
-
-# \- valid environment JSON loads successfully;
-
-# \- an environment missing nodes is rejected;
-
-# \- an environment missing relationships is rejected;
-
-# \- invalid JSON is rejected;
-
-# \- a missing JSON file is handled;
-
-# \- the real `environment.json` loads;
-
-# \- the real `controls.json` loads;
-
-# \- the real `risk-model.json` loads;
-
-# \- all six scenario JSON files load successfully.
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# evidence/22-pytest-model-loader.png
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \## 7. Full Test Suite
-
-# 
-
-# The complete project test suite is run with:
-
-# 
-
-# ```powershell
-
-# python -m pytest -v
-
-# ```
-
-# 
-
-# Current verified result:
-
-# 
-
-# ```text
-
-# 45 passed
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# evidence/23-pytest-full-suite-45-passed.png
-
-# ```
-
-# 
-
-# This confirms that all automated test categories pass together in the current project version.
-
-# 
-
-# \---
-
-# 
-
-# \## 8. Manual Scenario Verification
-
-# 
-
-# Automated testing is supported by manual before/after evidence.
-
-# 
-
-# \### Scenario 1 – MFA
-
-# 
-
-# ```text
-
-# OFF → OPEN
-
-# ON  → BLOCKED
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# 07-scenario-01-mfa-off-open.png
-
-# 08-scenario-01-mfa-on-blocked.png
-
-# ```
-
-# 
-
-# \### Scenario 2 – Session Timeout
-
-# 
-
-# ```text
-
-# OFF → OPEN
-
-# ON  → BLOCKED
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# 09-scenario-02-session-off-open.png
-
-# 10-scenario-02-session-on-blocked.png
-
-# ```
-
-# 
-
-# \### Scenario 3 – Account Disablement
-
-# 
-
-# ```text
-
-# OFF → OPEN
-
-# ON  → BLOCKED
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# 11-scenario-03-account-off-open.png
-
-# 12-scenario-03-account-on-blocked.png
-
-# ```
-
-# 
-
-# \### Scenario 4 – RBAC
-
-# 
-
-# ```text
-
-# OFF → OPEN
-
-# ON  → BLOCKED
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# 13-scenario-04-rbac-off-open.png
-
-# 14-scenario-04-rbac-on-blocked.png
-
-# ```
-
-# 
-
-# \### Scenario 5 – Privileged Re-authentication
-
-# 
-
-# ```text
-
-# OFF → OPEN
-
-# ON  → BLOCKED
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# 15-scenario-05-privauth-off-open.png
-
-# 16-scenario-05-privauth-on-blocked.png
-
-# ```
-
-# 
-
-# \### Scenario 6 – Trusted Device Restriction
-
-# 
-
-# ```text
-
-# OFF → OPEN
-
-# ON  → BLOCKED
-
-# ```
-
-# 
-
-# Evidence:
-
-# 
-
-# ```text
-
-# 17-scenario-06-device-off-open.png
-
-# 18-scenario-06-device-on-blocked.png
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \## 9. Requirements Traceability
-
-# 
-
-# | Requirement Area | Test Evidence |
-
-# |---|---|
-
-# | JSON loading | Model Loader tests |
-
-# | Required environment validation | Model Loader tests |
-
-# | Graph nodes | Graph tests |
-
-# | Directed relationships | Graph tests |
-
-# | BFS attack-path discovery | BFS tests |
-
-# | Unreachable target handling | BFS tests |
-
-# | Graph-cycle handling | BFS tests |
-
-# | Risk calculation | Risk Engine tests |
-
-# | Severity classification | Risk Engine tests |
-
-# | Invalid risk input handling | Risk Engine tests |
-
-# | Security-control behaviour | Control Engine tests |
-
-# | Six scenario files | Model Loader tests |
-
-# | Repeatable results | Full pytest suite |
-
-# 
-
-# Automatic before/after comparison and generated reporting will receive additional tests when those features are implemented.
-
-# 
-
-# \---
-
-# 
-
-# \## 10. Remaining Testing Work
-
-# 
-
-# The core simulator test suite is complete for the current implementation.
-
-# 
-
-# Additional tests will be added for the remaining planned features:
-
-# 
-
-# \- automatic `--compare` mode;
-
-# \- JSON result export;
-
-# \- CSV summary generation;
-
-# \- HTML report generation.
-
-# 
-
-# These future tests will confirm that the output files contain the correct scenario, risk, control and comparison results.
-
-# 
-
-# \---
-
-# 
-
-# \## 11. Test Evidence Retention
-
-# 
-
-# Testing evidence is retained through:
-
-# 
-
-# \- terminal output;
-
-# \- screenshots;
-
-# \- pytest results;
-
-# \- source test files;
-
-# \- Git commits;
-
-# \- GitHub history;
-
-# \- generated results and reports.
-
-# 
-
-# This evidence supports verification of the individual technical contribution and makes the project behaviour repeatable.
-
-
-
+This evidence supports verification of individual technical contribution and allows the current simulator behaviour to be repeated and checked.
