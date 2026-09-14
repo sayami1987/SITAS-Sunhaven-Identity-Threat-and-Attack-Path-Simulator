@@ -1,57 +1,67 @@
-# SITAS Security Policies
+# SITAS Security Policy Alignment Pack
 
 ## Purpose
 
-This folder contains the security policies that are relevant to the **Sunhaven Identity Threat and Attack-Path Simulator (SITAS)**.
+This folder explains how the **Sunhaven Identity Threat and Attack-Path Simulator (SITAS)** aligns with the wider Sunhaven Care security-policy framework and with recognised cybersecurity policy guidance.
 
-The policies are written for the fictional Sunhaven Care capstone environment. They are project-specific policies informed by common cybersecurity principles and the SANS cybersecurity policy library.
+These files are **not a second set of organisational Sunhaven policies**. The wider Sunhaven Care project policy set remains the source of organisational policy requirements.
 
-## Verified Policy Alignment
+The purpose of this folder is to show how SITAS:
 
-The current SITAS project was checked against the uploaded project folder before this policy set was prepared.
-
-The following points were verified from the current project files:
-
-- six threat scenario JSON files are present;
-- six security controls are defined in `config/controls.json`;
-- all six controls have simulation rules in `src/control_engine.py`;
-- the environment is explicitly described as fictional;
-- the protected target is named `Fictional Resident Records`;
-- SITAS uses a local directed graph and BFS pathfinder;
-- the risk model is stored in `config/risk-model.json`;
-- the complete automated test suite runs successfully with **45 passing tests**;
-- no Microsoft Entra, Microsoft Graph, Azure, HTTP, network or external API integration is present in the current `src/` code.
-
-Therefore, SITAS is **aligned with the policy principles that are within the simulator's scope**.
-
-It is important not to describe SITAS as operationally enforcing these policies in a real organisation. SITAS simulates the security effect of controls. For example, it models how MFA or account disablement changes an attack path, but it does not configure MFA or disable a real Microsoft Entra account.
+- models risks that are relevant to the Sunhaven policy framework;
+- simulates selected security controls;
+- tests whether those controls block modelled attack paths;
+- uses synthetic data and safe offline testing;
+- records repeatable evidence for the capstone project.
 
 ---
 
-## Policies in This Folder
+## Current SITAS Implementation Verified
 
-| No. | Policy | SITAS Connection | Verified Status |
-|---|---|---|---|
-| 01 | Identity and Access Management Policy | Overall identity/access model | Aligned in simulator |
-| 02 | Multi-Factor Authentication Policy | Scenario 1 / `CTRL-MFA` | Implemented and tested |
-| 03 | Account Lifecycle and Termination Policy | Scenario 3 / `CTRL-ACCOUNT` | Implemented and tested |
-| 04 | Shared Workstation and Session Security Policy | Scenario 2 / `CTRL-SESSION` | Implemented and tested |
-| 05 | RBAC and Least Privilege Policy | Scenario 4 / `CTRL-RBAC` | Implemented and tested |
-| 06 | Privileged Access Security Policy | Scenario 5 / `CTRL-PRIVAUTH` | Implemented and tested |
-| 07 | Trusted Device and Remote Access Policy | Scenario 6 / `CTRL-DEVICE` | Implemented and tested |
-| 08 | Secure Testing and Synthetic Data Policy | Fictional/offline environment and pytest | Followed by current project |
-| 09 | Cybersecurity Risk Assessment Policy | 5×5 risk model | Implemented and tested |
-
----
-
-## How the Policies Connect to SITAS
+The current repository contains:
 
 ```text
-Sunhaven Security Problem
+6 threat scenarios
+6 simulated security controls
+directed graph modelling
+Breadth-First Search attack-path discovery
+configurable 5 × 5 risk model
+45 passing automated pytest tests
+manual OPEN/BLOCKED evidence for all six scenarios
+```
+
+SITAS operates as a standalone Python/JSON simulator. It does not configure Microsoft Entra, call Microsoft Graph, modify real accounts, enforce real device compliance, or use real resident information.
+
+---
+
+## Files in This Folder
+
+| File | Purpose |
+|---|---|
+| `01-SITAS-policy-alignment.md` | Maps SITAS scenarios and controls to the Sunhaven policy areas and relevant SANS guidance |
+| `02-SITAS-secure-development-and-testing-standard.md` | Defines secure development and testing expectations for SITAS |
+| `03-SITAS-risk-and-control-validation-standard.md` | Defines how scenario risk and simulated-control outcomes are assessed |
+| `04-SITAS-evidence-and-data-handling-standard.md` | Defines synthetic-data, secret-handling and evidence requirements |
+| `05-SITAS-control-mapping-register.md` | Provides a concise traceable mapping from scenario to control, requirement, implementation and evidence |
+
+---
+
+## Relationship to the Wider Sunhaven Policy Set
+
+The formal Sunhaven Care policy set currently covers these major areas:
+
+- **POL-01 – Access Management**
+- **POL-02 – Workforce Identity Lifecycle**
+- **POL-03 – Authentication and Shared Device Security**
+
+SITAS does not replace these policies. It provides an analytical simulator that demonstrates why related controls matter.
+
+Example:
+
+```text
+Sunhaven Policy Requirement
         ↓
-Security Policy
-        ↓
-Expected Security Control
+Identity Security Control
         ↓
 SITAS Threat Scenario
         ↓
@@ -61,71 +71,16 @@ Risk Assessment
         ↓
 Control Simulation
         ↓
-OPEN or BLOCKED Result
+OPEN or BLOCKED
         ↓
-Testing Evidence
-```
-
-The policies define the expected security position. SITAS provides a technical simulation that demonstrates why those controls matter.
-
----
-
-## Important Scope Statement
-
-SITAS does not:
-
-- create or modify real user accounts;
-- configure Microsoft Entra;
-- make Microsoft Graph calls;
-- perform Joiner-Mover-Leaver automation;
-- carry out live access reviews;
-- monitor real security events;
-- enforce device compliance on real endpoints;
-- perform real cyberattacks;
-- use real employee or resident information.
-
-
----
-
-## Evidence Used for Verification
-
-The current project contains:
-
-```text
-scenarios/scenario-01-stolen-nurse-credential.json
-scenarios/scenario-02-shared-session.json
-scenarios/scenario-03-former-worker.json
-scenarios/scenario-04-excessive-privilege.json
-scenarios/scenario-05-privileged-admin.json
-scenarios/scenario-06-unmanaged-device.json
-```
-
-The control configuration contains:
-
-```text
-CTRL-MFA
-CTRL-RBAC
-CTRL-SESSION
-CTRL-ACCOUNT
-CTRL-PRIVAUTH
-CTRL-DEVICE
-```
-
-Automated testing currently covers the risk engine, graph/BFS engine, control engine and model/configuration loading.
-
-Verified test result:
-
-```text
-45 passed
+Evidence
 ```
 
 ---
 
-## Policy References
+## SANS Reference Basis
 
-These Sunhaven policies are original project adaptations. They are not copies of SANS templates.
-
-Useful external reference material:
+The structure and security principles in this alignment pack are informed by the SANS/Cybersecurity Risk Foundation policy library. Relevant references include:
 
 - SANS Cybersecurity / Information Security Policies and Standards  
   https://www.sans.org/information-security-policy
@@ -135,8 +90,32 @@ Useful external reference material:
   https://www.sans.org/information-security-policy/identity-management-policy
 - SANS Privileged Account Management Policy  
   https://www.sans.org/information-security-policy/privileged-account-management-policy
-- SANS Internal Network Access Management Policy  
-  https://www.sans.org/information-security-policy/internal-network-access-management-policy
+- SANS Privacy Management Policy  
+  https://www.sans.org/information-security-policy/privacy-management-policy
+- SANS Software Development Management Policy  
+  https://www.sans.org/information-security-policy/software-development-management-policy
 - SANS Safeguard Validation Management Policy  
   https://www.sans.org/information-security-policy/safeguard-validation-management-policy
+- SANS Internal Network Access Management Policy  
+  https://www.sans.org/information-security-policy/internal-network-access-management-policy
 
+These files are project-specific adaptations written for the fictional Sunhaven Care capstone environment. They are not copies of SANS templates.
+
+---
+
+## Important Scope Statement
+
+SITAS demonstrates the **modelled effect** of security controls.
+
+A result such as:
+
+```text
+MFA OFF → OPEN
+MFA ON  → BLOCKED
+```
+
+means the implemented SITAS rule blocks that modelled attack path.
+
+It does **not** mean that SITAS has enabled MFA in Microsoft Entra or proven that every possible real-world attack path has been eliminated.
+
+This distinction must be maintained in project documentation, evidence and demonstrations.
