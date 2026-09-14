@@ -19,28 +19,28 @@ The requirements are based on the implemented Sunhaven threat-modelling prototyp
 
 | ID | Requirement | Current Status | Verification |
 |---|---|---|---|
-| FR-01 | The system shall load a fictional Sunhaven environment from a JSON file. | Completed | Model-loader tests |
-| FR-02 | The system shall validate required environment data before processing. | Completed | Missing-node and missing-relationship tests |
-| FR-03 | The system shall represent environment objects as graph nodes. | Completed | Graph creation tests |
-| FR-04 | The system shall represent relationships between objects as directed graph edges. | Completed | Directed-relationship tests |
-| FR-05 | The system shall allow the threat source/start node to be defined for each scenario. | Completed | Scenario JSON files |
-| FR-06 | The system shall allow the protected target node to be defined for each scenario. | Completed | Scenario JSON files |
-| FR-07 | The system shall search for an attack path between the configured start and target nodes. | Completed | BFS attack-path tests |
-| FR-08 | The system shall use Breadth-First Search (BFS) for attack-path discovery. | Completed | `pathfinder.py` and BFS tests |
-| FR-09 | The system shall prevent graph cycles from causing infinite processing. | Completed and tested | Graph-cycle test |
-| FR-10 | The system shall calculate a risk score using likelihood and impact. | Completed | Risk-engine tests |
-| FR-11 | The system shall classify risk as Low, Medium, High or Critical. | Completed | Severity-boundary tests |
-| FR-12 | The system shall support simulated security controls. | Completed | Six controls implemented |
-| FR-13 | The system shall determine whether a relevant simulated security control blocks an identified attack path. | Completed | Control-engine OFF/ON tests |
-| FR-14 | The system shall compare attack exposure before and after a relevant security control is applied. | Partially completed | Manual OFF/ON comparison completed; automatic comparison mode is still planned |
-| FR-15 | The system shall display understandable scenario, attack-path, risk and control results. | Completed | Manual scenario evidence |
-| FR-16 | The system shall support multiple repeatable threat scenarios using the same analysis engine. | Completed | Six scenario files and shared `sitas.py` engine |
-| FR-17 | The system shall load risk settings from a JSON configuration file. | Completed | Real risk-model loading test |
-| FR-18 | The system shall validate likelihood and impact ratings before risk calculation. | Completed | Invalid likelihood, impact and non-integer tests |
-| FR-19 | The system shall support automated testing of the main analysis components. | Completed | 45 passing pytest tests |
-| FR-20 | The system shall export structured JSON result files. | Planned | Reporting tests to be added |
-| FR-21 | The system shall generate a CSV summary of scenario results. | Planned | Reporting tests to be added |
-| FR-22 | The system shall generate an understandable static HTML security report. | Planned | Reporting tests to be added |
+| SITAS-FR-01 | The system shall load a fictional Sunhaven environment from a JSON file. | Completed | Model-loader tests |
+| SITAS-FR-02 | The system shall validate required environment data before processing. | Completed | Missing-node and missing-relationship tests |
+| SITAS-FR-03 | The system shall represent environment objects as graph nodes. | Completed | Graph creation tests |
+| SITAS-FR-04 | The system shall represent relationships between objects as directed graph edges. | Completed | Directed-relationship tests |
+| SITAS-FR-05 | The system shall allow the threat source/start node to be defined for each scenario. | Completed | Scenario JSON files |
+| SITAS-FR-06 | The system shall allow the protected target node to be defined for each scenario. | Completed | Scenario JSON files |
+| SITAS-FR-07 | The system shall search for an attack path between the configured start and target nodes. | Completed | BFS attack-path tests |
+| SITAS-FR-08 | The system shall use Breadth-First Search (BFS) for attack-path discovery. | Completed | `pathfinder.py` and BFS tests |
+| SITAS-FR-09 | The system shall prevent graph cycles from causing infinite processing. | Completed and tested | Graph-cycle test |
+| SITAS-FR-10 | The system shall calculate a risk score using likelihood and impact. | Completed | Risk-engine tests |
+| SITAS-FR-11 | The system shall classify risk as Low, Medium, High or Critical. | Completed | Severity-boundary tests |
+| SITAS-FR-12 | The system shall support simulated security controls. | Completed | Six controls implemented |
+| SITAS-FR-13 | The system shall determine whether a relevant simulated security control blocks an identified attack path. | Completed | Control-engine OFF/ON tests |
+| SITAS-FR-14 | The system shall compare attack exposure before and after a relevant security control is applied. | Partially completed | Manual OFF/ON comparison completed; automatic comparison mode is still planned |
+| SITAS-FR-15 | The system shall display understandable scenario, attack-path, risk and control results. | Completed | Manual scenario evidence |
+| SITAS-FR-16 | The system shall support multiple repeatable threat scenarios using the same analysis engine. | Completed | Six scenario files and shared `sitas.py` engine |
+| SITAS-FR-17 | The system shall load risk settings from a JSON configuration file. | Completed | Real risk-model loading test |
+| SITAS-FR-18 | The system shall validate likelihood and impact ratings before risk calculation. | Completed | Invalid likelihood, impact and non-integer tests |
+| SITAS-FR-19 | The system shall support automated testing of the main analysis components. | Completed | 45 passing pytest tests |
+| SITAS-FR-20 | The system shall export structured JSON result files. | Planned | Reporting tests to be added |
+| SITAS-FR-21 | The system shall generate a CSV summary of scenario results. | Planned | Reporting tests to be added |
+| SITAS-FR-22 | The system shall generate an understandable static HTML security report. | Planned | Reporting tests to be added |
 
 ---
 
@@ -140,19 +140,19 @@ The risk model is used consistently across all implemented scenarios.
 
 | ID | Requirement | Current Status | Verification |
 |---|---|---|---|
-| NFR-01 | All scenario, identity, credential, session and resident data used by SITAS shall be fictional or synthetic. | Met | Current configuration and scenario design |
-| NFR-02 | SITAS shall operate without requiring a live Microsoft Entra environment. | Met | Standalone Python/JSON architecture |
-| NFR-03 | SITAS shall produce repeatable results when provided with the same input and configuration. | Met | Deterministic engines and automated tests |
-| NFR-04 | Risk calculations shall be simple, transparent and explainable. | Met | Configurable 5 × 5 risk model |
-| NFR-05 | Python source code shall be separated into understandable modules. | Met | Loader, graph, pathfinder, risk and control modules |
-| NFR-06 | The current implementation shall handle invalid or missing JSON and invalid risk ratings without uncontrolled failure. | Met and tested | Model-loader and risk-validation tests |
-| NFR-07 | The project shall not require real passwords, access tokens, API secrets or production credentials. | Met | Offline simulation design |
-| NFR-08 | The implementation shall be understandable and demonstrable during the Bachelor of Information Technology capstone assessment. | Met for current design | Modular code, diagrams and evidence |
-| NFR-09 | SITAS shall remain technically separate from other team members' operational IAM runtime components. | Met | Standalone project boundary |
-| NFR-10 | Testing and demonstration evidence shall be retained for assessment verification. | Met and ongoing | `evidence/` folder and pytest screenshots |
-| NFR-11 | The same core analysis engine shall be reusable across multiple scenarios. | Met | Six scenarios use the same modules and `sitas.py` |
-| NFR-12 | SITAS shall remain safe for offline demonstration and shall not perform real cyberattacks. | Met | Synthetic local simulation |
-| NFR-13 | Project documentation shall clearly distinguish simulated control behaviour from real-world operational enforcement. | Met and ongoing | README, policies and project documentation |
+| SITAS-NFR-01 | All scenario, identity, credential, session and resident data used by SITAS shall be fictional or synthetic. | Met | Current configuration and scenario design |
+| SITAS-NFR-02 | SITAS shall operate without requiring a live Microsoft Entra environment. | Met | Standalone Python/JSON architecture |
+| SITAS-NFR-03 | SITAS shall produce repeatable results when provided with the same input and configuration. | Met | Deterministic engines and automated tests |
+| SITAS-NFR-04 | Risk calculations shall be simple, transparent and explainable. | Met | Configurable 5 × 5 risk model |
+| SITAS-NFR-05 | Python source code shall be separated into understandable modules. | Met | Loader, graph, pathfinder, risk and control modules |
+| SITAS-NFR-06 | The current implementation shall handle invalid or missing JSON and invalid risk ratings without uncontrolled failure. | Met and tested | Model-loader and risk-validation tests |
+| SITAS-NFR-07 | The project shall not require real passwords, access tokens, API secrets or production credentials. | Met | Offline simulation design |
+| SITAS-NFR-08 | The implementation shall be understandable and demonstrable during the Bachelor of Information Technology capstone assessment. | Met for current design | Modular code, diagrams and evidence |
+| SITAS-NFR-09 | SITAS shall remain technically separate from other team members' operational IAM runtime components. | Met | Standalone project boundary |
+| SITAS-NFR-10 | Testing and demonstration evidence shall be retained for assessment verification. | Met and ongoing | `evidence/` folder and pytest screenshots |
+| SITAS-NFR-11 | The same core analysis engine shall be reusable across multiple scenarios. | Met | Six scenarios use the same modules and `sitas.py` |
+| SITAS-NFR-12 | SITAS shall remain safe for offline demonstration and shall not perform real cyberattacks. | Met | Synthetic local simulation |
+| SITAS-NFR-13 | Project documentation shall clearly distinguish simulated control behaviour from real-world operational enforcement. | Met and ongoing | README, policies and project documentation |
 
 ---
 
@@ -208,10 +208,10 @@ Automated testing
 ### Remaining Requirements
 
 ```text
-FR-14  Automatic before/after control comparison
-FR-20  JSON result export
-FR-21  CSV scenario summary
-FR-22  Static HTML security report
+SITAS-FR-14  Automatic before/after control comparison
+SITAS-FR-20  JSON result export
+SITAS-FR-21  CSV scenario summary
+SITAS-FR-22  Static HTML security report
 ```
 
 These remaining requirements are planned for the next development stage.
